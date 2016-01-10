@@ -39,16 +39,22 @@ frames = [os.path.basename(s.replace(' ', '\ ')) for s in glob.glob(os.path.join
 if not frames:
     print '  No frames found. Does your directory contain {} files?'.format(frame_format)
     sys.exit()
+else:
+    s = 's' if len(frames) > 1 else ''
+    print '  {} frame{} found'.format(len(frames), s)
 
 # Create a temporary directory to hold merged frames
 if not os.path.exists('./merged_frames'):
     os.makedirs('./merged_frames')
 
 # Merge frames
+print '  Merging frames...'
 for f in frames:
     command = 'convert +append {0} {1}'.format(' '.join([os.path.join(input_dir, f)] * multiple), os.path.join('./merged_frames', f))
     os.system(command)
 
 # Make movie from frames
+print '  Creating video from frames...'
 command = "ffmpeg -framerate 1/{} -pattern_type glob -i '{}/*.{}' -c:v libx264 -pix_fmt yuv420p {}".format(slide_duration, './merged_frames', frame_format, './' + output_movie_name + '.' + output_movie_format)
+print command
 os.system(command)
