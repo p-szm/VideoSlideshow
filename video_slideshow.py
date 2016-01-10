@@ -36,6 +36,10 @@ if not output_movie_name:
 # Get the list of frames
 frames = [os.path.basename(s.replace(' ', '\ ')) for s in glob.glob(os.path.join(input_dir, '*.' + frame_format))]
 
+if not frames:
+    print '  No frames found. Does your directory contain {} files?'.format(frame_format)
+    sys.exit()
+
 # Create a temporary directory to hold merged frames
 if not os.path.exists('./merged_frames'):
     os.makedirs('./merged_frames')
